@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './SignIn.css'
+
+const apiUrl = process.env.REACT_APP_API_URL;
 const SignIn = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -17,7 +19,7 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/signin', formData);
+      const response = await axios.post(`${apiUrl}/api/signin`, formData);
       // Store tokens in localStorage or context
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);

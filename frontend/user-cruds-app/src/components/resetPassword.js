@@ -1,55 +1,56 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import './ResetPassword.css'
+import './ResetPassword.css';
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ResetPassword = () => {
-  const { token } = useParams();
-  const [password, setPassword] = useState('');
-  const [cPassword, setCPassword] = useState('');
+  const [token, setToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [message, setMessage] = useState(''); // State for handling success or error messages
 
   const handleChange = (e) => {
-    if (e.target.name === 'password') {
-      setPassword(e.target.value);
-    } else {
-      setCPassword(e.target.value);
+    const { name, value } = e.target;
+    if (name === 'token') {
+      setToken(value);
+    } else if (name === 'newPassword') {
+      setNewPassword(value);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== cPassword) {
-      alert("Passwords don't match");
-      return;
-    }
     try {
-      const response = await axios.post('/api/reset-password', { password, token });
-      alert(response.data.success);
+      const response = await axios.post(`${apiUrl}/api/resetPassword`, { token, newPassword });
+      setMessage(response.data.message);
     } catch (error) {
-      alert(error.response.data.error);
+      setMessage(error.response?.data?.message || 'An error occurred');
     }
   };
 
   return (
-    <div>
+    <div className="reset-password-container">
       <h2>Reset Password</h2>
       <form onSubmit={handleSubmit}>
         <input
-          type="password"
-          name="password"
-          placeholder="New Password"
-          value={password}
+          type="text"
+          name="token"
+          placeholder="Enter Token"
+          value={token}
           onChange={handleChange}
           required
         />
         <input
           type="password"
-          name="cPassword"
-          placeholder="Confirm New Password"
-          value={cPassword}
+          name="newPassword"
+          placeholder="Enter New Password"
+          value={newPassword}
           onChange={handleChange}
           required
         />
         <button type="submit">Reset Password</button>
+        {message && <p className="message">{message}</p>} {/* Display success or error message */}
       </form>
     </div>
   );

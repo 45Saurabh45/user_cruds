@@ -1,39 +1,88 @@
+/* Container styling */
 .sign-up-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .sign-up-container h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .sign-up-container form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .sign-up-container input {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .sign-up-container button {
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-  }
-  
-  .sign-up-container button:hover {
-    background-color: #0056b3;
-  }
-  
+  max-width: 500px; /* Increased max-width for a larger container */
+  margin: 60px auto; /* Increased margin for better spacing */
+  padding: 30px; /* Increased padding for more space inside the container */
+  background-color: #ffffff; /* Changed background color for a cleaner look */
+  border-radius: 12px; /* Increased border-radius for a more rounded look */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow for a more prominent effect */
+}
+
+/* Heading styling */
+.sign-up-container h2 {
+  text-align: center;
+  color: #333; /* Darker color for better contrast */
+  margin-bottom: 20px; /* Added margin for spacing */
+  font-size: 1.8rem; /* Increased font size for the heading */
+  font-weight: 600; /* Added font weight for emphasis */
+}
+
+/* Form styling */
+.sign-up-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input field styling */
+.sign-up-container input {
+  margin: 12px 0; /* Increased margin for better spacing */
+  padding: 12px; /* Increased padding for a more comfortable input area */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 8px; /* Increased border-radius for a softer look */
+  font-size: 1rem; /* Increased font size for better readability */
+  transition: border-color 0.3s ease; /* Smooth transition for border color */
+}
+
+.sign-up-container input:focus {
+  border-color: #007bff; /* Blue border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Button styling */
+.sign-up-container button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px; /* Increased border-radius for consistency */
+  background-color: #007bff; /* Primary blue color */
+  color: white;
+  font-size: 1rem; /* Increased font size for readability */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions for hover effects */
+}
+
+.sign-up-container button:hover {
+  background-color: #0056b3; /* Darker blue for hover effect */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.sign-up-container button:active {
+  background-color: #004494; /* Even darker blue for active state */
+  transform: translateY(0); /* Reset lift effect on click */
+}
+
+/* Radio button container styling */
+.radio-buttons {
+  margin: 15px 0; /* Added margin for spacing */
+}
+
+.radio-buttons label {
+  display: block;
+  margin-bottom: 10px; /* Margin between radio buttons */
+  font-size: 1rem; /* Consistent font size */
+}
+
+/* Message styling */
+.message {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.message.success {
+  color: #28a745; /* Green color for success messages */
+}
+
+.message.error {
+  color: #dc3545; /* Red color for error messages */
+}
