@@ -1,6 +1,7 @@
 const { toTitleCase, validateEmail } = require("../config/function");
 const bcrypt = require("bcryptjs");
 const allmodels = require("../models/index");
+const {User} = require("../models")
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/keys");
 const path = require("path");
@@ -33,6 +34,7 @@ exports.isAdmin = async (req, res, next) => {
     const { name, email, password, cPassword, userRole } = req.body;
     let error = {};
   
+    console.log("email",email)
     if (!name || !email || !password || !cPassword) {
       error = {
         ...error,
@@ -41,12 +43,12 @@ exports.isAdmin = async (req, res, next) => {
         password: "Field must not be empty",
         cPassword: "Field must not be empty",
       };
-      return res.json({ error });
+      return res.status(400).json({ error });
     }
   
     if (name.length < 3 || name.length > 25) {
       error = { ...error, name: "Name must be 3-25 characters" };
-      return res.json({ error });
+      return res.status(400).json({ error });
     }
   
     if (!validateEmail(email)) {
@@ -54,7 +56,7 @@ exports.isAdmin = async (req, res, next) => {
         ...error,
         email: "Email is not valid",
       };
-      return res.json({ error });
+      return res.status(400).json({ error });
     }
   
     if (password.length < 8 || password.length > 255) {
@@ -62,7 +64,7 @@ exports.isAdmin = async (req, res, next) => {
         ...error,
         password: "Password must be between 8 and 255 characters",
       };
-      return res.json({ error });
+      return res.status(400).json({ error });
     }
   
     if (password !== cPassword) {
@@ -70,32 +72,36 @@ exports.isAdmin = async (req, res, next) => {
         ...error,
         cPassword: "Passwords do not match",
       };
-      return res.json({ error });
+      return res.status(400).json({ error });
     }
   
     try {
-      const existingUser = await allmodels.userModel.findOne({ email });
+      // Check if the email already exists
+      const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
         error = {
           ...error,
           email: "Email already exists",
         };
-        return res.json({ error });
+        return res.status(400).json({ error });
       }
   
+      // Hash the password
       const hashedPassword = bcrypt.hashSync(password, 10);
-      const newUser = new allmodels.userModel({
+  
+      // Create a new user
+      const newUser = await User.create({
         name: toTitleCase(name),
         email,
         password: hashedPassword,
-        userRole, // Role 1 for admin and 0 for user/customer
+        userRole, // Adjust this according to your role definitions
       });
   
-      await newUser.save();
-      res.json({
+      res.status(201).json({
         success: "Account created successfully. Please login",
       });
     } catch (err) {
+      console.log("error",err)
       next(err);
     }
   };
@@ -110,14 +116,16 @@ exports.isAdmin = async (req, res, next) => {
     }
   
     try {
-      const user = await allmodels.userModel.findOne({ email });
-      console.log(user)
+      // Find user by email
+      const user = await User.findOne({ where: { email } });
+  
       if (!user) {
         return res.json({
           error: "Invalid email or password",
         });
       }
   
+      // Check password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return res.json({
@@ -125,15 +133,15 @@ exports.isAdmin = async (req, res, next) => {
         });
       }
   
+      // Generate JWT token
       const token = jwt.sign(
-        { _id: user._id, role: user.userRole, email: user.email },
+        { id: user.id, role: user.userRole, email: user.email },
         JWT_SECRET
       );
   
-      const decodedToken = jwt.verify(token, JWT_SECRET);
       res.json({
         token,
-        user: decodedToken,
+        user: { id: user.id, email: user.email, role: user.userRole }, // Simplify user object
       });
     } catch (err) {
       next(err);

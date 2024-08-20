@@ -8,8 +8,8 @@ const basePath = '/api';
 module.exports = app => {
     //For signin page
     app.post(`${basePath}/isadmin`, controller.isAdmin);
-    app.post(`${basePath}/signup`, controller.postSignup);
-    app.post(`${basePath}/signin`, controller.postSignin);
+    app.post(`${basePath}/signup`, controller.postSignup); //Done
+    app.post(`${basePath}/signin`, controller.postSignin); // Done
     app.post(`${basePath}/user`, loginCheck, isAuth, isAdmin, controller.allUser);
 //For operations in Users
     app.get(`${basePath}/user/all-user`, controller.getAllUser);
