@@ -1,6 +1,3 @@
-/* This all of are helper function */
-const allmodels = require("../models/index");
-
 exports.toTitleCase = function (str) {
   return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -13,26 +10,4 @@ exports.validateEmail = function (mail) {
   } else {
     return false;
   }
-};
-
-exports.emailCheckInDatabase = async function (email) {
-  let user = await allmodels.userModel.findOne({ email: email });
-  user.exec((err, data) => {
-    if (!data) {
-      return false;
-    } else {
-      return true;
-    }
-  });
-};
-
-exports.phoneNumberCheckInDatabase = async function (phoneNumber) {
-  let user = await allmodels.userModel.findOne({ phoneNumber: phoneNumber });
-  user.exec((err, data) => {
-    if (data) {
-      return true;
-    } else {
-      return false;
-    }
-  });
 };

@@ -24,6 +24,10 @@ module.exports = {
       resetTokenExpiry: {
         type: Sequelize.DATE
       },
+      userRole: {
+        type: Sequelize.STRING, 
+        allowNull: true 
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
