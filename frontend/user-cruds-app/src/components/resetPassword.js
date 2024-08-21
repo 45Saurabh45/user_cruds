@@ -4,15 +4,16 @@ import { useParams } from 'react-router-dom';
 import './ResetPassword.css';
 
 const apiUrl = process.env.REACT_APP_API_URL;
+const token = localStorage.getItem('accessToken');
 
 const ResetPassword = () => {
-  const [token, setToken] = useState('');
+  const [resetToken, setToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState(''); // State for handling success or error messages
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'token') {
+    if (name === 'resetToken') {
       setToken(value);
     } else if (name === 'newPassword') {
       setNewPassword(value);
@@ -22,7 +23,12 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${apiUrl}/api/resetPassword`, { token, newPassword });
+      const response = await axios.post(`${apiUrl}/api/resetPassword`, { resetToken, newPassword },
+        {
+          headers: {
+            token: `Bearer ${token}`
+          }
+    });
       setMessage(response.data.message);
     } catch (error) {
       setMessage(error.response?.data?.message || 'An error occurred');
@@ -35,9 +41,9 @@ const ResetPassword = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="token"
+          name="resetToken"
           placeholder="Enter Token"
-          value={token}
+          value={resetToken}
           onChange={handleChange}
           required
         />

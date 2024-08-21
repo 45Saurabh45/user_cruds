@@ -250,16 +250,16 @@ const JWT_SECRET = process.env.JWT_SECRET;
   };
   
   exports.resetPassword = async (req, res, next) => {
-    const { token, newPassword } = req.body;
+    const { resetToken, newPassword } = req.body;
   
-    if (!token || !newPassword) {
+    if (!resetToken || !newPassword) {
       return res.status(400).json({ message: "Token and new password are required" });
     }
   
     try {
       const user = await User.findOne({
         where: {
-          resetToken: token,
+          resetToken: resetToken,
           resetTokenExpiry: {
             [Op.gt]: Date.now()
           }
@@ -331,13 +331,35 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
   exports.allUser = async (req, res, next) => {
     try {
+      
+      const page = parseInt(req.query.page, 10) || 1; 
+      const limit = parseInt(req.query.limit, 10) || 10; 
+  
+     
+      const offset = (page - 1) * limit;
+  
+
       const allUser = await User.findAll({
+        limit: limit,
+        offset: offset,
       });
-      res.json({ users: allUser });
+
+      const totalUsers = await User.count();
+  
+      res.json({
+        users: allUser,
+        pagination: {
+          currentPage: page,
+          pageSize: limit,
+          totalUsers: totalUsers,
+          totalPages: Math.ceil(totalUsers / limit),
+        },
+      });
     } catch (err) {
       next(err);
     }
   };
+  
     
 
   

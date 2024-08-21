@@ -3,6 +3,8 @@ import axios from 'axios';
 import './ForgotPassword.css'
 
 const apiUrl = process.env.REACT_APP_API_URL;
+const token = localStorage.getItem('accessToken');
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
 
@@ -13,7 +15,10 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${apiUrl}/api/forgotPassword`, { email });
+      const response = await axios.post(`${apiUrl}/api/forgotPassword`, { email },{
+        headers: {
+          token: `Bearer ${token}`
+        }});
       alert(response.data.message);
     } catch (error) {
       alert(error.response.data.error);
